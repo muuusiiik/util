@@ -11,7 +11,7 @@ import muuusiiik.util as msk
 
 # define logger
 logger = msk.log.GetLogger(level=msk.log.DEBUG, formatter='minimal')
-hand   = msk.log.GetHandler(filename='logs/usage.log', when='daily', msk.log.WARNING, formatter='full')
+hand   = msk.log.GetHandler(filename='logs/usage.log', when='daily', level=msk.log.WARNING, formatter='full')
 logger.addHandler(hand)
 
 # use logger
