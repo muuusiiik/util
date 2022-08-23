@@ -129,6 +129,8 @@ class data:
 
 
 class log:
+    import logging.handlers
+
     """ static class for creating logger instance """
     DEBUG   =10
     INFO    =20
