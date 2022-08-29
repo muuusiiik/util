@@ -4,7 +4,7 @@ from setuptools import find_packages
 README = ''.join([line for line in open("README.md").readlines()])
 setup(
     name="muuusiiik",
-    version="0.0.13",
+    version="0.0.14",
     author="@muuusiiik",
     author_email="muuusiiikd@gmail.com",
     description="simple utilities",
