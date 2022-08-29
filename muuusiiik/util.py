@@ -9,17 +9,17 @@ class timer:
     """
     def __init__(self):
         """ init and tik() the timer """
-        self.start = None
-        self.stop  = None
+        self._start = None
+        self._stop  = None
         self.tik()
 
     def tik(self):
-        self.start = time.time()
-        return self.start
+        self._start = time.time()
+        return self._start
 
     def tok(self):
-        self.stop  = time.time()
-        return self.stop
+        self._stop  = time.time()
+        return self._stop
 
     def taketime(seconds=None):
         """ static function for calc the time """
@@ -36,14 +36,14 @@ class timer:
 
     def reset(self):
         """ reset start & stop timer to None, then tik() the timer """
-        self.start = None
-        self.stop  = None
+        self._start = None
+        self._stop  = None
         self.tik()
 
     def time(self, seconds=None):
         """ in-house function for calc timer """
         if seconds == None:
-            seconds = self.stop - self.start if self.start and self.stop else None
+            seconds = self._stop - self._start if self._start and self._stop else None
  
         return timer.taketime(seconds)
 
@@ -118,6 +118,7 @@ class data:
                 f.write(line+'\n')
             print(f'> saving content to "{filename}"')
 
+
     def load(filename, loadtype='original'):
         """ load text content in a file """
         print(f'> loading "{loadtype}" content from "{filename}"')
@@ -125,6 +126,20 @@ class data:
             if loadtype == 'original': lines = [line[:-1]    for line in f.readlines()]
             else:                      lines = [line.strip() for line in f.readlines()]
         return lines
+
+
+    def load_file_list(f_list, n_char:int=0):
+        """ load content from a file list, each content line > n_char """
+        content = []
+        n_fail  = 0
+        for f in f_list:
+            try:
+                content += [v for v in data.load(f, loadtype='strip') if len(v) > n_char]
+            except Exception as e:
+                n_fail  += 1
+        print(f'>>> load content from {len(f_list)} file(s) .. failed {n_fail} file(s)')
+        return content
+            
 
 
 
@@ -162,7 +177,7 @@ class log:
         if   formatter == None: formatter = 'minimal'
         if   formatter == 'nothing':      formatter = '{message}'
         elif formatter == 'minimal':      formatter = '{asctime} || {message}'
-        elif formatter == 'basic':        formatter = '{levelname:<8} || {name} || {message}'
+        elif formatter == 'basic':        formatter = '{asctime} || {name} || {message}'
         elif formatter == 'full':         formatter = '{levelname:<8} || {asctime} || {name} || {message}'
 
         fmt = logging.Formatter(formatter, style='{')
