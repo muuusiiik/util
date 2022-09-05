@@ -94,41 +94,41 @@ class data:
         return True
 
 
-    def save_object(obj, filename):
+    def save_object(obj, filename, verbose:bool=True):
         """ save any data to dill object file """
         data.make_path(filename)
         with open(filename, 'wb') as f:
             dill.dump(obj, f)
-            print(f'> saving data to "{filename}"')
+            if verbose: print(f'> saving data to "{filename}"')
 
 
-    def load_object(filename):
+    def load_object(filename, verbose:bool=True):
         """ load content in a file to dill data object """
-        print(f'> loading data from "{filename}"')
+        if verbose: print(f'> loading data from "{filename}"')
         with open(filename, 'rb') as f:
             data = dill.load(f)
         return data
 
 
-    def save(lines, filename):
+    def save(lines, filename, verbose:bool=True):
         """ save text in lines to a file """
         data.make_path(filename)
         with open(filename, 'w') as f:
             for line in lines:
                 f.write(line+'\n')
-            print(f'> saving content to "{filename}"')
+            if verbose: print(f'> saving content to "{filename}"')
 
 
-    def load(filename, loadtype='original'):
+    def load(filename, loadtype='original', verbose:bool=True):
         """ load text content in a file """
-        print(f'> loading "{loadtype}" content from "{filename}"')
+        if verbose: print(f'> loading "{loadtype}" content from "{filename}"')
         with open(filename, 'r') as f:
             if loadtype == 'original': lines = [line[:-1]    for line in f.readlines()]
             else:                      lines = [line.strip() for line in f.readlines()]
         return lines
 
 
-    def load_file_list(f_list, n_char:int=0):
+    def load_file_list(f_list, n_char:int=0, verbose:bool=True):
         """ load content from a file list, each content line > n_char """
         content = []
         n_fail  = 0
@@ -137,7 +137,7 @@ class data:
                 content += [v for v in data.load(f, loadtype='strip') if len(v) > n_char]
             except Exception as e:
                 n_fail  += 1
-        print(f'>>> load content from {len(f_list)} file(s) .. failed {n_fail} file(s)')
+        if verbose: print(f'>>> load content from {len(f_list)} file(s) .. failed {n_fail} file(s)')
         return content
             
 
