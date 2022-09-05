@@ -134,7 +134,7 @@ class data:
         n_fail  = 0
         for f in f_list:
             try:
-                content += [v for v in data.load(f, loadtype='strip') if len(v) > n_char]
+                content += [v for v in data.load(f, loadtype='strip', verbose=verbose) if len(v) > n_char]
             except Exception as e:
                 n_fail  += 1
         if verbose: print(f'>>> load content from {len(f_list)} file(s) .. failed {n_fail} file(s)')
