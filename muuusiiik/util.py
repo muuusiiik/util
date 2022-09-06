@@ -139,6 +139,16 @@ class data:
                 n_fail  += 1
         if verbose: print(f'>>> load content from {len(f_list)} file(s) .. failed {n_fail} file(s)')
         return content
+
+
+    def category_mapper(f_list, n_char:int=0, verbose:bool=True):
+        """ grouping a line of token list as a category
+            return those categories and mapper
+        """
+        lines    = data.load_file_list(f_list, n_char, verbose=verbose)
+        category = {line.split(',')[0].strip(): [token.strip() for token in line.split(',')] for line in lines}
+        mapper   = {l: k for k, L in category.items() for l in L}
+        return category, mapper
             
 
 
