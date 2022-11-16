@@ -3,6 +3,7 @@ import time
 import pathlib
 import dill
 import yaml
+import hashlib, json, random
 
 class timer:
     """ utility for calculate time duration
@@ -151,6 +152,30 @@ class data:
         mapper   = {l: k for k, L in category.items() for l in L}
         return category, mapper
             
+            
+
+class hasher:
+    def hash(obj, n:int=None):
+        """ if obj type is dictionary, convert to string before hashing
+            n is number of digit
+        """
+        try:
+            s_obj   = json.dumps(obj).encode() if type(obj) == dict else obj.encode()
+            hashval = hashlib.md5(s_obj).hexdigest()
+            return hashval[:n]
+
+        except Exception as e:
+            print(f'> hasher.hash() error - {str(e)}')
+            raise e
+
+
+    def random_hash(prefix:str='', n:int=None):
+        """ randomly generate a key and its hash
+        """
+        seed = f'{random.randint(0, 99):02}'
+        key  = f'{prefix}{seed}'
+        return key, hasher.hash(key, n)
+
 
 
 
