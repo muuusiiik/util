@@ -3,6 +3,7 @@
 * **timer** - counter a runtime 
 * **configure** - reading configure file in yaml format
 * **data** - load & save plain text & object 
+* **hasher** - string hashing
 * **log** - log manager
 
 ### DEMO LOG 
