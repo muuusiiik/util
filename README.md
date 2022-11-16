@@ -24,12 +24,12 @@ logger.critical(' > critical')
 
 ### HOW TO BUILD A PACKAGE TO PYPI
 prerequisite
-``` sh
+``` shell
 pip install setuptools wheel tqdm twine
 ```
 
 build and upload package
-```sh
+```shell
 # preparing tar.gz package 
 python setup.py sdist
 # uploading package to pypi server
@@ -37,7 +37,7 @@ python -m twine upload dist/* --verbose
 ```
 
 install package
-``` sh
+``` shell
 # install latest version
 pip install muuusiiik --upgrade
 # specific version with no cache
