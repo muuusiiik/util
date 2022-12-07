@@ -58,7 +58,7 @@ class configure:
         return conf
 
 
-    def write(content, filename):
+    def save(content, filename):
         """ write data to yaml file configure """
         data.make_path(filename)
         with open(filename, 'w') as f:
