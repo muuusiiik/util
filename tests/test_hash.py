@@ -10,8 +10,10 @@ def test_hash_string():
 
 
 def test_hash_dict():
-
-    ...
+    obj    = {'type': 'dict', 'value': 'some value'}
+    result = msk.hasher.hash(obj)
+    assert type(obj) == dict
+    assert result    == '2f7a3110878f1c45dcafa9f62b428171'
 
 
 def test_hash_dict_with_array():
