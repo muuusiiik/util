@@ -1,6 +1,7 @@
 *__pycache__/
 build/
 dist/
+_env/
 .eggs/
 *.egg-info/
 *.swp
