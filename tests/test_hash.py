@@ -68,3 +68,9 @@ def test_exception_attribute_error_when_obj_is_list():
     with raises(AttributeError):
         result  = msk.hasher.hash(obj)
 
+
+def test_exception_type_error_when_n_is_not_int():
+    obj     = 'demo text'
+    with raises(TypeError):
+        result  = msk.hasher.hash(obj, n=[4])
+

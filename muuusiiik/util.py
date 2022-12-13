@@ -155,7 +155,7 @@ class data:
             
 
 class hasher:
-    def hash(obj, n:int=None):
+    def hash(obj, n:int=None) -> str:
         """ if obj type is dictionary, convert to string before hashing
             n is number of digit
         """
@@ -165,14 +165,19 @@ class hasher:
             return hashval[:n]
 
         except AttributeError as e:
-            print(f'> hasher.hash() error, please obj type should be string or dict - {str(e)}')
+            print(f'> hasher.hash() error, obj type should be string or dict - {str(e)}')
+            raise e
+
+        except TypeError as e:
+            print(f'> hasher.hash() error, n type should be int or None - {str(e)}')
             raise e
 
         except Exception as e:
             print(f'> hasher.hash() error - {str(e)}')
             raise e
 
-    def random_hash(prefix:str='', n:int=None):
+
+    def random_hash(prefix:str='', n:int=None) -> (str, str):
         """ randomly generate a key and its hash
         """
         seed = f'{random.randint(0, 99):02}'
