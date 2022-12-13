@@ -180,9 +180,19 @@ class hasher:
     def random_hash(prefix:str='', n:int=None) -> (str, str):
         """ randomly generate a key and its hash
         """
-        seed = f'{random.randint(0, 99):02}'
-        key  = f'{prefix}{seed}'
-        return key, hasher.hash(key, n)
+        try:
+            seed = f'{random.randint(0, 99):02}'
+            key  = f'{prefix}{seed}'
+            return key, hasher.hash(key, n)
+
+        except TypeError as e:
+            print(f'> hasher.random_hash() error, prefix type should be string, n type should be int or None - {str(e)}')
+            raise e
+
+        except Exception as e:
+            print('> hasher.random_hash() error - {str(e)}')
+            raise e
+
 
 
 
