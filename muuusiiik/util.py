@@ -164,10 +164,13 @@ class hasher:
             hashval = hashlib.md5(s_obj).hexdigest()
             return hashval[:n]
 
+        except AttributeError as e:
+            print(f'> hasher.hash() error, please obj type should be string or dict - {str(e)}')
+            raise e
+
         except Exception as e:
             print(f'> hasher.hash() error - {str(e)}')
             raise e
-
 
     def random_hash(prefix:str='', n:int=None):
         """ randomly generate a key and its hash
