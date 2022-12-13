@@ -9,9 +9,6 @@ class RandomMock:
         rd = random.choice([1,2,3])
         return RandomMock._tb[rd]
 
-    def two_digits():
-        return f'{RandomMock.n():02}'
-
 
 # -----------------------------
 # TEST CASES FOR HASHER.HASH()
