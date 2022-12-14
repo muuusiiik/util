@@ -67,9 +67,37 @@ class configure:
 
 
 class data:
-    def exist(path, pathtype='any'):
+    def path_split(path:str):
+        """ split folder_path out of file_name
+        """
+        try:
+            path   = path.strip()
+            tokens = path.split('/')
+            p = '.' if len(tokens) == 1 else '/'.join(tokens[:-1])
+            f = tokens[-1]
+            return p, f
+
+        except Exception as e:
+            raise e
+
+
+    def exist(path, pathtype:str='any'):
         """ check if given path exist """
-        thing = pathlib.Path(path)
+        try:
+            thing   = pathlib.Path(path)
+
+            if   pathtype == 'any':    return thing.exists()
+            elif pathtype == 'folder': return thing.is_dir()
+            elif pathtype == 'file':   return thing.is_file()
+            else: raise TypeError('pathtype should be ["any", "file" or "folder"]')
+
+        except TypeError as e:
+            raise e
+
+        except Exception as e:
+            raise e
+            
+
         if thing.exists():
             if   pathtype == 'file':   return True if thing.is_file() else False
             elif pathtype == 'folder': return True if thing.is_dir()  else False
@@ -94,6 +122,14 @@ class data:
             print(f'error: {str(e)}')
             return False
         return True
+
+
+    def ls(path:str):
+        ...
+
+
+    def rm():
+        ...
 
 
     def save_object(obj, filename, verbose:bool=True):
