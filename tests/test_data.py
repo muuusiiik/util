@@ -95,6 +95,12 @@ def test_there_is_existing_file():
     assert result == True
 
 
+def test_there_is_existing_file_without_folder_path():
+    file_name = 'README.md'
+    result    = msk.data.exist(file_name)
+    assert result == True
+
+
 def test_there_is_not_existing_file():
     file_name = 'tests/non_existing_file.py'
     result    = msk.data.exist(file_name)
@@ -113,6 +119,18 @@ def test_there_is_existing_folder():
     assert result == True
 
 
+def test_exist_current_folder_with_special_char():
+    # current folder is dot
+    folder_name = '.'
+    result      = msk.data.exist(folder_name)
+    assert result == True
+
+    # current folder is empty string
+    folder_name = ''
+    result      = msk.data.exist(folder_name)
+    assert result == True
+
+
 def test_there_is_no_exising_folder():
     folder_name = 'not_existing_tests/'
     result      = msk.data.exist(folder_name)
@@ -126,23 +144,22 @@ def test_raise_type_error_for_incorrect_path_type():
 
 
 # -----------------------------
-# UTILITY :: CREATE & REMOVE FILE
+# MOCK :: CREATE & REMOVE FILE
 # -----------------------------
 def _make_sure_there_is_a_file(file_name:str):
     fd, fn = msk.data.path_split(file_name)
     msk.data.make_path(fd)
     msk.data.save('', file_name)
 
-
 def _make_sure_the_folder_removed(path:str):
     msk.data.rm(path)
-
 
 def _make_a_new_folder_with_3_files_1_folder_inside(folder, fname):
     # mock a new folder with 3 files and 1 folder inside
     file_name = f'{folder}/{fname}'
     for i in range(3): _make_sure_there_is_a_file(f'{file_name}_{i:02}.txt')
     msk.data.make_path(f'{folder}/temp_folder', pathtype='folder')
+
 
 # -----------------------------
 # LS A SPECIFIC PATH
@@ -189,16 +206,28 @@ def test_list_contents_in_a_given_folder_in_dict_format():
     assert msk.data.exist(fd) == False
 
 
-def test_list_contents_in_current_folder():
-    ...
+def test_list_contents_in_current_folder_with_special_char():
+    path   = '.'
+    result = msk.data.ls(path)
+    assert ('README.md' in result)         == True
+    assert ('not_existing_file' in result) == False
+
+    path   = ''
+    result = msk.data.ls(path)
+    assert ('README.md' in result)         == True
+    assert ('not_existing_file' in result) == False
 
 
 def test_list_contents_in_a_non_existing_folder():
-    ...
+    path   = 'non_existing_path'
+    with raises(FileNotFoundError):
+        result = msk.data.ls(path)
 
 
-def test_list_conents_in_a_():
-    ...
+def test_list_conents_in_a_path_the_same_as_file_name():
+    path   = 'tests/test_data.py'
+    with raises(NotADirectoryError):
+        result = msk.data.ls(path)
 
 # -----------------------------
 # REMOVE FILE & FOLDER

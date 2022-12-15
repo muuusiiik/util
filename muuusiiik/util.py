@@ -133,6 +133,7 @@ class data:
 
     def ls(path:str, fmt:str='list'):
         try:
+            path   = '.' if path == '' else path
             result = {'folder': [], 'file': []}
             for obj in os.scandir(path):
                 o_type = 'folder' if obj.is_dir() else 'file'
