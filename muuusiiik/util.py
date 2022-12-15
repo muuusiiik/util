@@ -1,6 +1,6 @@
 import logging
 import time
-import pathlib
+import os, pathlib, shutil
 import dill
 import yaml
 import hashlib, json, random
@@ -67,21 +67,37 @@ class configure:
 
 
 class data:
-    def path_split(path:str):
+    def path_split(path:str) -> (str, str):
         """ split folder_path out of file_name
         """
         try:
             path   = path.strip()
             tokens = path.split('/')
-            p = '.' if len(tokens) == 1 else '/'.join(tokens[:-1])
-            f = tokens[-1]
-            return p, f
+            folder = '.' if len(tokens) == 1 else '/'.join(tokens[:-1])
+            fname  = tokens[-1]
+            return folder, fname
 
         except Exception as e:
             raise e
 
 
-    def exist(path, pathtype:str='any'):
+    def path_type(path:str) -> str:
+        """ check type [file, folder, None] of a given path
+        """
+        try:
+            thing = pathlib.Path(path)
+            if thing.exists():
+                if   thing.is_dir():  return 'folder'
+                elif thing.is_file(): return 'file'
+                else:                return None
+            else:
+                return None
+
+        except Exception as e:
+            raise e
+
+
+    def exist(path, pathtype:str='any') -> bool:
         """ check if given path exist """
         try:
             thing   = pathlib.Path(path)
@@ -98,38 +114,74 @@ class data:
             raise e
             
 
-        if thing.exists():
-            if   pathtype == 'file':   return True if thing.is_file() else False
-            elif pathtype == 'folder': return True if thing.is_dir()  else False
-            else:                      return True
-        else:
-            return False
-
-
-    def make_path(path, pathtype='file'):
+    def make_path(path, pathtype='file') -> bool:
         """ make folder in the path, return True if success, else False """
         # setup folder path
+        #if pathtype == 'file':
+        #    tokens = path.split('/')
+        #    folder = '/'.join(tokens[:-1])
+        #    fname  = tokens[-1]
+        #else:
+        #    folder = path
+
+        # setup folder path
         if pathtype == 'file':
-            tokens = path.split('/')
-            folder = '/'.join(tokens[:-1])
-            fname  = tokens[-1]
+            _folder, _ = data.path_split(path)
         else:
-            folder = path
+            _folder    = path[:-1] if path.endswith('/') else path
         # create folder
         try: 
-            if len(folder) > 0: pathlib.Path(folder).mkdir(parents=True, exist_ok=True)
+            #if len(folder) > 0: pathlib.Path(folder).mkdir(parents=True, exist_ok=True)
+            if len(_folder) and _folder != '.': pathlib.Path(_folder).mkdir(parents=True, exist_ok=True)
         except Exception as e:
             print(f'error: {str(e)}')
             return False
         return True
 
 
-    def ls(path:str):
-        ...
+    def ls(path:str, fmt:str='list'):
+        try:
+            result = {'folder': [], 'file': []}
+            for obj in os.scandir(path):
+                o_type = 'folder' if obj.is_dir() else 'file'
+                result[o_type].append(obj.name)
+
+            if fmt == 'list':
+                out  = []
+                out += [f'{item}/' for item in result['folder']]
+                out += result['file']
+                return out
+
+            elif fmt == 'dict':
+                return result
+
+            else:
+                raise Exception('something error')
+
+        except Exception as e:
+            raise e
 
 
-    def rm():
-        ...
+    def rm(path:str):
+        try:
+            file_type = data.path_type(path)
+            if   file_type == 'file':
+                os.remove(path)
+                return True
+            elif file_type == 'folder':
+                shutil.rmtree(path)
+                return True
+            else:
+                raise FileNotFoundError(f'path "{path}" not found')
+
+
+        except FileNotFoundError as e:
+            print(str(e))
+            return False
+
+        except Exception as e:
+            print(f'> rm() error - {str(e)}')
+            return False
 
 
     def save_object(obj, filename, verbose:bool=True):
@@ -151,6 +203,7 @@ class data:
     def save(lines, filename, verbose:bool=True):
         """ save text in lines to a file """
         data.make_path(filename)
+        lines = [lines] if type(lines) == str else lines
         with open(filename, 'w') as f:
             for line in lines:
                 f.write(line+'\n')
