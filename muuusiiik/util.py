@@ -162,14 +162,16 @@ class data:
             raise e
 
 
-    def rm(path:str):
+    def rm(path:str, verbose:bool=False) -> bool:
         try:
             file_type = data.path_type(path)
             if   file_type == 'file':
                 os.remove(path)
+                if verbose: print(f'> file "{path}" removed')
                 return True
             elif file_type == 'folder':
                 shutil.rmtree(path)
+                if verbose: print(f'> folder "{path}" removed')
                 return True
             else:
                 raise FileNotFoundError(f'path "{path}" not found')
