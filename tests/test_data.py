@@ -8,24 +8,37 @@ from   pytest import raises
 # FILE PATH SPLIT 
 # -----------------------------
 def test_path_split_on_folder_path():
-    filename = '/some/folder_path/'
-    p, f     = msk.data.path_split(filename)
-    assert p == '/some/folder_path'
-    assert f == ''
+    file_name = '/some/folder_path/'
+    fd, fn    = msk.data.path_split(file_name)
+    assert (fd, fn) == ('/some/folder_path', '')
     
 
 def test_path_split_on_file_path():
-    filename = '/some/folder_path/file_name.txt'
-    p, f     = msk.data.path_split(filename)
-    assert p == '/some/folder_path'
-    assert f == 'file_name.txt'
+    file_name = '/some/folder_path/file_name.txt'
+    fd, fn    = msk.data.path_split(file_name)
+    assert (fd, fn) == ('/some/folder_path', 'file_name.txt')
     
 
 def test_path_split_on_current_folder():
-    filename = 'file_name.txt'
-    p, f     = msk.data.path_split(filename)
-    assert p == '.'
-    assert f == 'file_name.txt'
+    # current path with filename
+    file_name = 'file_name.txt'
+    fd, fn    = msk.data.path_split(file_name)
+    assert (fd, fn) == ('.', 'file_name.txt')
+
+    # nothing in the path
+    file_name = ''
+    fd, fn    = msk.data.path_split(file_name)
+    assert (fd, fn) == ('.', '')
+
+    # current path is .
+    file_name = '.'
+    fd, fn    = msk.data.path_split(file_name)
+    assert (fd, fn) == ('.', '')
+
+    # file_name is single letter
+    file_name = 'x'
+    fd, fn    = msk.data.path_split(file_name)
+    assert (fd, fn) == ('.', 'x')
 
 
 def test_path_split_raise_attribute_error():
@@ -51,6 +64,18 @@ def test_path_type_is_folder_when_give_folder_path():
 
     # with slash
     path   = 'tests/'
+    result = msk.data.path_type(path)
+    assert result == 'folder'
+
+
+def test_path_type_is_current_dir_represented_with_special_char():
+    # path is dot
+    path   = '.'
+    result = msk.data.path_type(path)
+    assert result == 'folder'
+
+    # path is empty string
+    path   = ''
     result = msk.data.path_type(path)
     assert result == 'folder'
 
@@ -162,6 +187,10 @@ def test_list_contents_in_a_given_folder_in_dict_format():
     # remove the folder
     _make_sure_the_folder_removed(fd)
     assert msk.data.exist(fd) == False
+
+
+def test_list_contents_in_current_folder():
+    ...
 
 
 def test_list_contents_in_a_non_existing_folder():

@@ -74,7 +74,7 @@ class data:
             path   = path.strip()
             tokens = path.split('/')
             folder = '.' if len(tokens) == 1 else '/'.join(tokens[:-1])
-            fname  = tokens[-1]
+            fname  = '' if tokens[-1] == '.' else tokens[-1]
             return folder, fname
 
         except Exception as e:
@@ -114,16 +114,8 @@ class data:
             raise e
             
 
-    def make_path(path, pathtype='file') -> bool:
+    def make_path(path, pathtype:str='file') -> bool:
         """ make folder in the path, return True if success, else False """
-        # setup folder path
-        #if pathtype == 'file':
-        #    tokens = path.split('/')
-        #    folder = '/'.join(tokens[:-1])
-        #    fname  = tokens[-1]
-        #else:
-        #    folder = path
-
         # setup folder path
         if pathtype == 'file':
             _folder, _ = data.path_split(path)
