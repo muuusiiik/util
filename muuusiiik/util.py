@@ -213,7 +213,6 @@ class data:
             raise e
 
 
-
     def load(filename, loadtype='original', verbose:bool=True):
         """ load text content in a file """
         if verbose: print(f'> loading "{loadtype}" content from "{filename}"')
@@ -223,13 +222,21 @@ class data:
         return lines
 
 
-    def load_file_list(f_list, n_char:int=0, verbose:bool=True):
+    def __assess_load_condition(load_condition=None, n_char:int=0):
+        """ if load_condition is None, then the condition is True if its len() greater than n_char """
+        if load_condition: return load_condition
+        else:              return lambda v: True if len(v) > n_char else False
+
+    def load_file_list(f_list, n_char:int=0, load_condition=None, verbose:bool=True):
         """ load content from a file list, each content line > n_char """
+        # setup load_condition
+        load_condition = data.__assess_load_condition(load_condition, n_char)
+        # start the flow
         content = []
         n_fail  = 0
         for f in f_list:
             try:
-                content += [v for v in data.load(f, loadtype='strip', verbose=verbose) if len(v) > n_char]
+                content += [v for v in data.load(f, loadtype='strip', verbose=verbose) if load_condition(v)]
             except Exception as e:
                 n_fail  += 1
         if verbose: print(f'>>> load content from {len(f_list)} file(s) .. failed {n_fail} file(s)')
