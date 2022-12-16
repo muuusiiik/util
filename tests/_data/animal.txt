@@ -1,2 +1,0 @@
-mammal,dog,cat
-reptile,snake, croc, komodo

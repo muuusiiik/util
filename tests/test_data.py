@@ -524,3 +524,7 @@ def test_category_mapper():
     assert mapper['two']  == 'eng'
     assert mapper['herb'] == 'herb'
 
+    # reset the folder
+    Mock.make_sure_the_folder_removed(folder_path)
+    result = msk.data.exist(folder_path)
+    assert result == False

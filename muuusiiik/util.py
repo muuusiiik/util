@@ -53,9 +53,13 @@ class timer:
 class configure:
     def load(filename):
         """ load yaml file to configure """
-        with open(filename, 'r') as f:
-            conf = yaml.full_load(f)
-        return conf
+        try:
+            with open(filename, 'r') as f:
+                conf = yaml.full_load(f)
+            return conf
+
+        except Exception as e:
+            raise e
 
 
     def save(content, filename):
