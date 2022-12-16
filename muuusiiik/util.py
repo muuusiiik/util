@@ -115,7 +115,9 @@ class data:
             
 
     def make_path(path, pathtype:str='file') -> bool:
-        """ make folder in the path, return True if success, else False """
+        """ make folder in the path, return True if success, else False 
+            if the path is folder, adding / at the end would be preferable
+        """
         # setup folder path
         if pathtype == 'file':
             _folder, _ = data.path_split(path)
@@ -192,18 +194,24 @@ class data:
         """ load content in a file to dill data object """
         if verbose: print(f'> loading data from "{filename}"')
         with open(filename, 'rb') as f:
-            data = dill.load(f)
-        return data
+            obj = dill.load(f)
+        return obj
 
 
     def save(lines, filename, verbose:bool=True):
         """ save text in lines to a file """
-        data.make_path(filename)
-        lines = [lines] if type(lines) == str else lines
-        with open(filename, 'w') as f:
-            for line in lines:
-                f.write(line+'\n')
-            if verbose: print(f'> saving content to "{filename}"')
+        try:
+            lines = '' if lines == None else lines
+            lines = [lines] if type(lines) == str else lines
+            data.make_path(filename)
+            with open(filename, 'w') as f:
+                for line in lines:
+                    f.write(line+'\n')
+                if verbose: print(f'> saving content to "{filename}"')
+
+        except Exception as e:
+            raise e
+
 
 
     def load(filename, loadtype='original', verbose:bool=True):
