@@ -273,12 +273,16 @@ def test_remove_a_folder():
     assert (fd in ls_list) == False
 
 
-def _test_remove_a_non_existing_file():
-    ...
+def test_remove_a_non_existing_file():
+    file_name = 'tests/non_existing_file.txt'
+    result    = msk.data.rm(file_name)
+    assert result == False
 
 
-def _test_remove_a_non_existing_folder():
-    ...
+def test_remove_a_non_existing_folder():
+    folder_path = 'tests/non_existing_folder/'
+    result      = msk.data.rm(folder_path)
+    assert result == False
 
 
 # -----------------------------

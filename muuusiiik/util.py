@@ -167,7 +167,8 @@ class data:
                 if verbose: print(f'> folder "{path}" removed')
                 return True
             else:
-                raise FileNotFoundError(f'path "{path}" not found')
+                # file_type = None since the result of non-existing in path_type() 
+                raise FileNotFoundError(f'"{path}" is not found')
 
 
         except FileNotFoundError as e:
