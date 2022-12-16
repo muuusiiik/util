@@ -213,7 +213,7 @@ class data:
             raise e
 
 
-    def load(filename, loadtype='original', verbose:bool=True):
+    def load(filename, loadtype='original', verbose:bool=True) -> list:
         """ load text content in a file """
         if verbose: print(f'> loading "{loadtype}" content from "{filename}"')
         with open(filename, 'r') as f:
@@ -227,7 +227,7 @@ class data:
         if load_condition: return load_condition
         else:              return lambda v: True if len(v) > n_char else False
 
-    def load_file_list(f_list, n_char:int=0, load_condition=None, verbose:bool=True):
+    def load_file_list(f_list, n_char:int=0, load_condition=None, verbose:bool=True) -> list:
         """ load content from a file list, each content line > n_char """
         # setup load_condition
         load_condition = data.__assess_load_condition(load_condition, n_char)
@@ -243,12 +243,12 @@ class data:
         return content
 
 
-    def category_mapper(f_list, n_char:int=0, verbose:bool=True):
+    def category_mapper(f_list, n_char:int=0, verbose:bool=True) -> (dict, dict):
         """ grouping a line of token list as a category
             return those categories and mapper
         """
         lines    = data.load_file_list(f_list, n_char, verbose=verbose)
-        category = {line.split(',')[0].strip(): [token.strip() for token in line.split(',')] for line in lines}
+        category = {line.split(',')[0].strip(): [token.strip() for token in line.split(',') if len(token.strip()) > 0] for line in lines}
         mapper   = {l: k for k, L in category.items() for l in L}
         return category, mapper
             
