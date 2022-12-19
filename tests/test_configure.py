@@ -2,6 +2,9 @@ import muuusiiik.util as msk
 from   pytest import raises
 
 def test_save_and_load_configure_by_dict():
+    """ simply save and load a configure 
+        the configure is in a dict format
+    """
     conf = {'module': 'configure',
             'checklist': ['save', 'load']
            }
@@ -21,6 +24,9 @@ def test_save_and_load_configure_by_dict():
 
 
 def test_save_and_load_configure_by_plain_text():
+    """ simply save and load a configure 
+        the configure is in a yaml format
+    """
     conf = """
     module: configure
     checklist:
@@ -44,12 +50,18 @@ def test_save_and_load_configure_by_plain_text():
 
 
 def test_load_non_existing_configure_file():
+    """ scenario of oading a non-existing file
+        expecting a file-not-found-error
+    """
     path = 'tests/_config/non_existing.conf'
     with raises(FileNotFoundError):
         loaded_conf = msk.configure.load(path)
 
 
 def test_load_none_configure_file():
+    """ scenario of a given path is None
+        expecting type-error
+    """
     path = None
     with raises(TypeError):
         loaded_conf = msk.configure.load(path)
