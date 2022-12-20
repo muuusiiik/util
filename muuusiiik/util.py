@@ -305,11 +305,13 @@ class log:
     import logging.handlers
 
     """ static class for creating logger instance """
-    DEBUG   =10
-    INFO    =20
-    WARNING =30
-    ERROR   =40
-    CRITICAL=50
+    DEBUG    = 10
+    INFO     = 20
+    WARNING  = 30
+    ERROR    = 40
+    CRITICAL = 50
+
+    FORMATTER= {k: k for k in ['nothing', 'minimal', 'basic', 'full']}
 
     def info(logger, message=''):
         """ print information of the given handler """
@@ -320,8 +322,23 @@ class log:
             print(f'  {hand}')
         print()
 
+    def _validate_formatter(formatter:str='minimal'):
+        """ formatter is a list of [nothing, minimal, basic, full] otherwise, nothing
+        """
+        if not formatter: formatter = 'minimal'
+        formatter = formatter.lower()
+        return log.FORMATTER.get(formatter, 'nothing')
 
-    def GetHandler(filename=None, when=None, level=logging.DEBUG, formatter='minimal'):
+    def _validate_when(when:str):
+        """ modify the readable {when} to a format that logging can process """
+        #w = 'midnight' if when == 'daily' else 'W0' if when=='weekly' else when
+        if when is None: return None
+        # daily  -> midnight
+        # weekly -> W0
+        return 'midnight' if when == 'daily' else 'W0' if when == 'weekly' else when
+
+
+    def GetHandler(filename=None, when=None, level:int=logging.DEBUG, formatter:str='minimal'):
         """ formatter will be in f-string format
             formatter: [nothing, minimal, basic, full, custom]
             o nothing: only message
@@ -332,7 +349,9 @@ class log:
 
             when: preset is [daily, weekly] or logging format e.g., W0
         """
-        if   formatter == None: formatter = 'minimal'
+        #if   formatter == None: formatter = 'minimal'
+        # validate format of the given formatter
+        formatter = log._validate_formatter(formatter)
         if   formatter == 'nothing':      formatter = '{message}'
         elif formatter == 'minimal':      formatter = '{asctime} || {message}'
         elif formatter == 'basic':        formatter = '{asctime} || {name} || {message}'
@@ -343,7 +362,8 @@ class log:
             # make sure the folder is exist
             data.make_path(filename)
             # create log_handler
-            w = 'midnight' if when == 'daily' else 'W0' if when=='weekly' else when
+            #w = 'midnight' if when == 'daily' else 'W0' if when=='weekly' else when
+            w = log._validate_when(when)
             if w is not None:
                 handler = logging.handlers.TimedRotatingFileHandler(filename, when=w, encoding='utf8')
             else:
@@ -356,11 +376,18 @@ class log:
         return handler
 
 
+    def clear_by_name(name:str='muuusiiik'):
+        """ force clear the logger if already exist """
+        if logging.getLogger(name).hasHandlers(): logging.getLogger(name).handlers.clear()
+
 
     def GetLogger(name='muuusiiik', filename=None, when=None, level=logging.DEBUG, formatter='minimal'):
         """ generate Logger """
         # manage logger
         if not name: name = __name__
+        # clear the existing logger if already exist
+        log.clear_by_name(name)
+        # create root logger
         logger = logging.getLogger(name)
         logger.setLevel(logging.DEBUG)
         # manage handler

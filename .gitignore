@@ -5,4 +5,5 @@ _env/
 .eggs/
 *.egg-info/
 *.swp
+*.ipynb
 NOTE
