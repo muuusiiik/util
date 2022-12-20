@@ -376,7 +376,7 @@ class log:
         return handler
 
 
-    def clear_by_name(name:str='muuusiiik'):
+    def clear_by_name(name:str):
         """ force clear the logger if already exist """
         if logging.getLogger(name).hasHandlers(): logging.getLogger(name).handlers.clear()
 
