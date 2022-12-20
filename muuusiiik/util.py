@@ -331,7 +331,6 @@ class log:
 
     def _validate_when(when:str):
         """ modify the readable {when} to a format that logging can process """
-        #w = 'midnight' if when == 'daily' else 'W0' if when=='weekly' else when
         if when is None: return None
         # daily  -> midnight
         # weekly -> W0
@@ -349,7 +348,6 @@ class log:
 
             when: preset is [daily, weekly] or logging format e.g., W0
         """
-        #if   formatter == None: formatter = 'minimal'
         # validate format of the given formatter
         formatter = log._validate_formatter(formatter)
         if   formatter == 'nothing':      formatter = '{message}'
@@ -361,8 +359,7 @@ class log:
         if filename:
             # make sure the folder is exist
             data.make_path(filename)
-            # create log_handler
-            #w = 'midnight' if when == 'daily' else 'W0' if when=='weekly' else when
+            # create log_handler for file-logging
             w = log._validate_when(when)
             if w is not None:
                 handler = logging.handlers.TimedRotatingFileHandler(filename, when=w, encoding='utf8')

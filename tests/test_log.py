@@ -111,6 +111,9 @@ def test_when_validation():
     when = 'weekly'
     assert msk.log._validate_when(when) == 'W0'
 
-    # else
+    # when is None
+    when = None
+    assert msk.log._validate_when(when) == when
+    # when is any
     when = 'something-else'
     assert msk.log._validate_when(when) == when
