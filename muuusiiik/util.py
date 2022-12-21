@@ -70,6 +70,27 @@ class configure:
 
 
 
+class configure_loader:
+    def __init__(self, f_configure):
+        self.reset()
+        self.load(f_configure)
+
+    def reset(self):
+        self.path    = None
+        self.content = {}
+
+    def load(self, f_configure):
+        self.path    = f_configure
+        self.content = configure.load(f_configure)
+
+    def save(self):
+        configure.save(self.content, self.path)
+
+    def get(self, field):
+        return self.content.get(field, None)
+
+
+
 class data:
     def path_split(path:str) -> (str, str):
         """ split folder_path out of file_name
