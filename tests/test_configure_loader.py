@@ -67,3 +67,11 @@ def test_configure_loader_load_non_existing_configure():
     f_configure = 'not-existing-file.conf'
     with raises(FileNotFoundError):
         conf = msk.configure_loader(f_configure)
+
+
+def test_configure_loader_load_none_and_get_empty_class_as_reset():
+    f_configure = None
+    conf = msk.configure_loader(f_configure)
+    assert conf.path    == None
+    assert conf.content == {}
+

@@ -79,9 +79,10 @@ class configure_loader:
         self.path    = None
         self.content = {}
 
-    def load(self, f_configure):
-        self.path    = f_configure
-        self.content = configure.load(f_configure)
+    def load(self, f_configure:str=None):
+        if f_configure:
+            self.path    = f_configure
+            self.content = configure.load(f_configure)
 
     def save(self):
         configure.save(self.content, self.path)
