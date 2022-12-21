@@ -1,4 +1,5 @@
 import muuusiiik.util as msk
+from   pytest import raises
 
 # ============
 # MOCK UP ENV
@@ -62,3 +63,7 @@ def test_configure_loader_load_content():
     MockEnv.remove_env()
 
 
+def test_configure_loader_load_non_existing_configure():
+    f_configure = 'not-existing-file.conf'
+    with raises(FileNotFoundError):
+        conf = msk.configure_loader(f_configure)
