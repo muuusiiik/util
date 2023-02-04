@@ -4,6 +4,7 @@
 * **configure** - reading configure file in yaml format
 * **data** - load & save plain text & object 
 * **hasher** - string hashing
+* **param_tool** - convert between dict and plain-text
 * **log** - log manager
 
 ### DEMO LOG 
