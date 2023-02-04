@@ -321,6 +321,66 @@ class hasher:
 
 
 
+class param_tool:
+    """ simple parser between dict and plain text
+        this class does not smart enough to convert complex dict e.g., hierarchy dict
+    """
+    def validate_list(content:str, check_type:bool=True):
+        """
+        """
+        chunks = content.split(',')
+        result = []
+        for chunk in chunks:
+            try:
+                chunk = chunk.strip()
+                if check_type: chunk = eval(chunk)
+            except NameError as e:
+                ...
+            except:
+                ...
+
+            finally:
+                result.append(chunk)
+
+        if len(chunks) == 1: return result[0]
+        else:                return result
+
+
+    def to_text(content:dict, delimeter='|', verbose:bool=False):
+        """ input as dict e.g., content={ch:1, sch:3, subject: math}
+            output will be 'ch=1|sch=3|subject=math'
+        """
+        if content is None:     return ''
+        if len(content) == 0:   return ''
+        parse_list = lambda L: ','.join([str(l) for l in L])
+        return delimeter.join( [f'{k}={parse_list(v)}' if type(v) is list else f'{k}={v}' for k, v in content.items()] )
+
+
+    def to_dict(content:str=None, delimeter='|', check_type:bool=True, verbose:bool=False):
+        """ input as text e.g., content='ch=1|sch=3|subject=math'
+            output will be dict {ch:1, sch:3, subject: math}
+        """
+        try:
+            if content is None:             return {}
+            if len(content.strip()) == 0:   return {}
+            if verbose: print(f'> content: {content}')
+            chunks = content.split(delimeter)
+            params = {}
+            for chunk in chunks:
+                k, v      = chunk.split('=')
+                k         = k.replace(' ', '')
+                v         = v.strip()
+                params[k] = param_tool.validate_list(v, check_type=check_type)
+            return params
+
+        except ValueError as e:
+            print(f'> parse_tool.to_dict("{content}") with delimeter="{delimeter}" error - {str(e)}')
+            return {}
+
+
+
+
+
 
 
 class log:
