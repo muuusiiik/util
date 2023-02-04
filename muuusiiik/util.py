@@ -378,6 +378,16 @@ class param_tool:
             return {}
 
 
+    def repack(content:str, delimeter:str='|', verbose:bool=False, **kwargs):
+        """ modify values in one-ine content
+        """
+        if not kwargs: return content
+        # parse content to dict
+        params = param_tool.to_dict(content, delimeter=delimeter, verbose=verbose)
+        # update params
+        params.update(kwargs)
+        # pack dict to one-line content
+        return param_tool.to_text(params, delimeter=delimeter, verbose=verbose)
 
 
 

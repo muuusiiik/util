@@ -48,14 +48,19 @@ def test_param_tool_convert_dict_to_text():
 
 
 def test_param_tool_convert_text_to_dict():
-    content  = 'ch=1|sch=1|session=init'
+    content  = 'ch=1|sch=1|done=1,2,3,4|session=init'
     result   = msk.param_tool.to_dict(content, delimeter='|')
-    expected = {'ch': 1, 'sch': 1, 'session':'init'}
+    expected = {'ch': 1, 'sch': 1, 'done': [1,2,3,4], 'session':'init'}
     assert result == expected
 
 
-def _test_param_tool_repack_param_to_content():
-    ...
-
-
+#================
+# REPACK CONTENT
+#================
+def test_param_tool_repack_param_to_content():
+    content  = 'ch=1|sch=1|session=init'
+    kwargs   = {'done': [1,2,3,4], 'session': 'next step'}
+    result   = msk.param_tool.repack(content, **kwargs)
+    expected = 'ch=1|sch=1|session=next step|done=1,2,3,4'
+    assert result == expected
 
