@@ -24,6 +24,13 @@ logger.error(' > error')
 logger.critical(' > critical')
 ```
 
+### DEMO PARSER
+```python
+import muuusiiik.parser as ps
+
+```
+
+
 ### HOW TO BUILD A PACKAGE TO PYPI
 prerequisite
 ``` shell
