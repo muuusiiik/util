@@ -154,7 +154,7 @@ class data:
             #if len(folder) > 0: pathlib.Path(folder).mkdir(parents=True, exist_ok=True)
             if len(_folder) and _folder != '.': pathlib.Path(_folder).mkdir(parents=True, exist_ok=True)
         except Exception as e:
-            print(f'error: {str(e)}')
+            print(f'error: {type(e)} - {str(e)}')
             return False
         return True
 
@@ -204,7 +204,7 @@ class data:
             return False
 
         except Exception as e:
-            print(f'> rm() error - {str(e)}')
+            print(f'> rm() error - {type(e)} - {str(e)}')
             return False
 
 
@@ -291,15 +291,15 @@ class hasher:
             return hashval[:n]
 
         except AttributeError as e:
-            print(f'> hasher.hash() error, obj type should be string or dict - {str(e)}')
+            print(f'> hasher.hash() error, obj type should be string or dict - {type(e)} - {str(e)}')
             raise e
 
         except TypeError as e:
-            print(f'> hasher.hash() error, n type should be int or None - {str(e)}')
+            print(f'> hasher.hash() error, n type should be int or None - {type(e)} - {str(e)}')
             raise e
 
         except Exception as e:
-            print(f'> hasher.hash() error - {str(e)}')
+            print(f'> hasher.hash() error - {type(e)} - {str(e)}')
             raise e
 
 
@@ -312,11 +312,11 @@ class hasher:
             return key, hasher.hash(key, n)
 
         except TypeError as e:
-            print(f'> hasher.random_hash() error, prefix type should be string, n type should be int or None - {str(e)}')
+            print(f'> hasher.random_hash() error, prefix type should be string, n type should be int or None - {type(e)} - {str(e)}')
             raise e
 
         except Exception as e:
-            print('> hasher.random_hash() error - {str(e)}')
+            print(f'> hasher.random_hash() error - {type(e)} - {str(e)}')
             raise e
 
 
@@ -374,8 +374,26 @@ class param_tool:
             return params
 
         except ValueError as e:
-            print(f'> parse_tool.to_dict("{content}") with delimeter="{delimeter}" error - {str(e)}')
+            print(f'> parse_tool.to_dict("{content}") with delimeter="{delimeter}" error - {type(e)} - {str(e)}')
             return {}
+
+    def dict_to_key_val_list(content:dict, key='key', val='val'):
+        try:
+            return [{key: k, val: v} for k, v in content.items()]
+        except Exception as e:
+            print(f'> parse_tool.dict_to_key_val_list("{content}") with with key: {key}, val: {val}  error - {type(e)} - {str(e)}')
+            raise e
+
+
+    def key_val_list_to_dict(content:list, key='key', val='val'):
+        try:
+            return {it[key]: it[val] for it in content}
+        except Exception as e:
+            print(f'> parse_tool.key_val_list_to_dict("{content}") with with key: {key}, val: {val}  error - {type(e)} - {str(e)}')
+            raise e
+
+
+
 
 
     def repack(content:str, delimeter:str='|', verbose:bool=False, **kwargs):
