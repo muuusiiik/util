@@ -37,6 +37,13 @@ def test_param_tool_validate_list_mixed_number_in_list_without_check_type():
     result   = msk.param_tool.validate_list(content, check_type=False)
     assert result == ['1.0', 'two', '3.4']
 
+def test_param_tool_validate_list_plain_text():
+    """ keep it is plain-text (do nothing)
+    """
+    content  = 'qno:+2,sc=3|qno:3'
+    result   = msk.param_tool.validate_list(content, check_type=False, plaintext=True)
+    assert result == content
+
 #=================
 # CONVERT CONTENT
 #=================

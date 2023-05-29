@@ -62,11 +62,11 @@ class configure:
             raise e
 
 
-    def save(content, filename):
+    def save(content, filename, sort_keys:bool=False):
         """ write data to yaml file configure """
         data.make_path(filename)
         with open(filename, 'w') as f:
-            yaml.dump(content, f, allow_unicode=True)
+            yaml.dump(content, f, allow_unicode=True, sort_keys=sort_keys)
 
 
 
@@ -325,9 +325,10 @@ class param_tool:
     """ simple parser between dict and plain text
         this class does not smart enough to convert complex dict e.g., hierarchy dict
     """
-    def validate_list(content:str, check_type:bool=True):
+    def validate_list(content:str, check_type:bool=True, plaintext:bool=False):
         """
         """
+        if plaintext: return content
         chunks = content.split(',')
         result = []
         for chunk in chunks:
@@ -356,7 +357,7 @@ class param_tool:
         return delimeter.join( [f'{k}={parse_list(v)}' if type(v) is list else f'{k}={v}' for k, v in content.items()] )
 
 
-    def to_dict(content:str=None, delimeter='|', check_type:bool=True, verbose:bool=False):
+    def to_dict(content:str=None, delimeter='|', check_type:bool=True, plaintext:bool=False, verbose:bool=False):
         """ input as text e.g., content='ch=1|sch=3|subject=math'
             output will be dict {ch:1, sch:3, subject: math}
         """
@@ -370,7 +371,7 @@ class param_tool:
                 k, v      = chunk.split('=')
                 k         = k.replace(' ', '')
                 v         = v.strip()
-                params[k] = param_tool.validate_list(v, check_type=check_type)
+                params[k] = param_tool.validate_list(v, check_type=check_type, plaintext=plaintext)
             return params
 
         except ValueError as e:
