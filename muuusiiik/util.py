@@ -397,12 +397,12 @@ class param_tool:
 
 
 
-    def repack(content:str, delimeter:str='|', verbose:bool=False, **kwargs):
+    def repack(content:str, delimeter:str='|', check_type:bool=True, plaintext:bool=False, verbose:bool=False, **kwargs):
         """ modify values in one-ine content
         """
         if not kwargs: return content
         # parse content to dict
-        params = param_tool.to_dict(content, delimeter=delimeter, verbose=verbose)
+        params = param_tool.to_dict(content, delimeter=delimeter, check_type=check_type, plaintext=plaintext,  verbose=verbose)
         # update params
         params.update(kwargs)
         # pack dict to one-line content
