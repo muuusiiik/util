@@ -3,7 +3,7 @@ import time
 import os, pathlib, shutil
 import dill
 import yaml
-import hashlib, json, random
+import hashlib, base64, json, random
 
 class timer:
     """ utility for calculate time duration
@@ -281,13 +281,20 @@ class data:
             
 
 class hasher:
-    def hash(obj, n:int=None) -> str:
+    def hash(obj, n:int=None, base:str='md5', force_hex:str=None) -> str:
         """ if obj type is dictionary, convert to string before hashing
             n is number of digit
+            base: [md5, base64]
         """
         try:
             s_obj   = json.dumps(obj).encode() if type(obj) == dict else obj.encode()
-            hashval = hashlib.md5(s_obj).hexdigest()
+            hashval = hashlib.md5(s_obj)
+            if base == 'md5':
+                hashval = hashval.hexdigest()
+            else:
+                hashval = base64.b64encode(hashval.digest())
+                if force_hex: hashval = hashval.hex()
+                hashval = hashval.decode('utf-8') if type(hashval)==bytes else hashval
             return hashval[:n]
 
         except AttributeError as e:
@@ -303,13 +310,16 @@ class hasher:
             raise e
 
 
-    def random_hash(prefix:str='', n:int=None) -> (str, str):
+    def random_hash(prefix:str='', n:int=None, base:str='md5', force_hex:bool=None, seed:int=None) -> (str, str):
         """ randomly generate a key and its hash
+            md5 - hex
+            base64 - not hex
         """
         try:
-            seed = f'{random.randint(0, 99):02}'
-            key  = f'{prefix}{seed}'
-            return key, hasher.hash(key, n)
+            random.seed(seed)
+            rd_seed = random.randint(0, 1_000_000_000_000)
+            key  = f'{prefix}{rd_seed}'
+            return key, hasher.hash(key, n, base=base, force_hex=force_hex)
 
         except TypeError as e:
             print(f'> hasher.random_hash() error, prefix type should be string, n type should be int or None - {type(e)} - {str(e)}')
@@ -318,6 +328,9 @@ class hasher:
         except Exception as e:
             print(f'> hasher.random_hash() error - {type(e)} - {str(e)}')
             raise e
+
+    def info():
+        return 'random within range 0 - 1 billion | support base64 hex'
 
 
 
