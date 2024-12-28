@@ -281,21 +281,20 @@ class data:
             
 
 class hasher:
-    def hash(obj, n:int=None, base:str='md5', force_hex:str=True) -> str:
+    def hash(obj, n:int=None, base:str='md5') -> str:
         """ if obj type is dictionary, convert to string before hashing
+            hashed result is in hex format
             n is number of digit
             base: [md5, base64]
-            force_hex (bool): return string of int or hex (default is True)
         """
         try:
             s_obj   = json.dumps(obj).encode() if type(obj) == dict else obj.encode()
             hashval = hashlib.md5(s_obj)
             if base == 'md5':
                 hashval = hashval.hexdigest()
-                if not force_hex: hashval = int(hashval, 16) # convert hex to int
             else:
                 hashval = base64.b64encode(hashval.digest())
-                if force_hex: hashval = hashval.hex()        # convert int to hex
+                hashval = hashval.hex()        # convert int to hex
                 hashval = hashval.decode('utf-8') if type(hashval)==bytes else hashval
             return hashval[:n]
 
@@ -312,7 +311,7 @@ class hasher:
             raise e
 
 
-    def random_hash(prefix:str='', n:int=None, base:str='md5', force_hex:bool=None, seed:int=None) -> (str, str):
+    def random_hash(prefix:str='', n:int=None, base:str='md5', seed:int=None) -> (str, str):
         """ randomly generate a key and its hash
             md5 - hex
             base64 - not hex
@@ -321,7 +320,7 @@ class hasher:
             random.seed(seed)
             rd_seed = random.randint(0, 1_000_000_000_000)
             key  = f'{prefix}{rd_seed}'
-            return key, hasher.hash(key, n, base=base, force_hex=force_hex)
+            return key, hasher.hash(key, n, base=base)
 
         except TypeError as e:
             print(f'> hasher.random_hash() error, prefix type should be string, n type should be int or None - {type(e)} - {str(e)}')
