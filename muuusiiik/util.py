@@ -281,19 +281,21 @@ class data:
             
 
 class hasher:
-    def hash(obj, n:int=None, base:str='md5', force_hex:str=None) -> str:
+    def hash(obj, n:int=None, base:str='md5', force_hex:str=True) -> str:
         """ if obj type is dictionary, convert to string before hashing
             n is number of digit
             base: [md5, base64]
+            force_hex (bool): return string of int or hex (default is True)
         """
         try:
             s_obj   = json.dumps(obj).encode() if type(obj) == dict else obj.encode()
             hashval = hashlib.md5(s_obj)
             if base == 'md5':
                 hashval = hashval.hexdigest()
+                if not force_hex: hashval = int(hashval, 16) # convert hex to int
             else:
                 hashval = base64.b64encode(hashval.digest())
-                if force_hex: hashval = hashval.hex()
+                if force_hex: hashval = hashval.hex()        # convert int to hex
                 hashval = hashval.decode('utf-8') if type(hashval)==bytes else hashval
             return hashval[:n]
 
